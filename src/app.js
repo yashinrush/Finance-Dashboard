@@ -7,7 +7,8 @@ const path = require("path");
 const fs = require("fs");
 
 // Ensure data directory exists
-const dataDir = path.join(__dirname, "../data");
+let dataDir = path.join(__dirname, "../data");
+if (process.env.VERCEL) dataDir = path.join("/tmp", "data");
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 const app = express();
@@ -57,11 +58,13 @@ app.use((req, res) => {
 app.use(require("./middleware/errorHandler"));
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`\n🚀  Finance Backend running on http://localhost:${PORT}`);
-  console.log(`   Docs: see README.md`);
-  console.log(`   Seed: npm run seed\n`);
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`\n🚀  Finance Backend running on http://localhost:${PORT}`);
+    console.log(`   Docs: see README.md`);
+    console.log(`   Seed: npm run seed\n`);
+  });
+}
 
 module.exports = app;

@@ -1,571 +1,639 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Finance OS — Dashboard</title>
-  <meta name="description" content="Industry-grade finance dashboard with real-time analytics, RBAC, and full record management." />
+  <meta name="description"
+    content="Industry-grade finance dashboard with real-time analytics, RBAC, and full record management." />
   <link rel="stylesheet" href="/styles.css" />
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════════
      LOGIN SCREEN
 ═══════════════════════════════════════════════════════ -->
-<div id="login-screen">
-  <div class="login-bg">
-    <div class="login-bg-grid"></div>
-    <div class="login-bg-blob3"></div>
-  </div>
-
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="login-logo-icon">💹</div>
-      <div>
-        <div class="login-logo-text">Finance OS</div>
-        <div class="login-logo-sub">Enterprise Dashboard</div>
-      </div>
+  <div id="login-screen">
+    <div class="login-bg">
+      <div class="login-bg-grid"></div>
+      <div class="login-bg-blob3"></div>
     </div>
 
-    <div class="login-title">Welcome back</div>
-    <div class="login-subtitle">Sign in to access your financial command center</div>
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-logo-icon">💹</div>
+        <div>
+          <div class="login-logo-text">Finance OS</div>
+          <div class="login-logo-sub">Enterprise Dashboard</div>
+        </div>
+      </div>
 
-    <!-- Demo credentials -->
-    <div class="demo-creds">
-      <p>
-        <strong>Admin</strong> —
-        <span class="demo-link" onclick="fillDemo('admin@demo.com','Admin123!')">admin@demo.com / Admin123!</span><br>
-        <strong>Analyst</strong> —
-        <span class="demo-link" onclick="fillDemo('analyst@demo.com','Analyst123!')">analyst@demo.com / Analyst123!</span><br>
-        <strong>Viewer</strong> —
-        <span class="demo-link" onclick="fillDemo('viewer@demo.com','Viewer123!')">viewer@demo.com / Viewer123!</span>
-      </p>
+      <div class="login-title">Welcome back</div>
+      <div class="login-subtitle">Sign in to access your financial command center</div>
+
+      <!-- Demo credentials -->
+      <div class="demo-creds">
+        <p>
+          <strong>Admin</strong> —
+          <span class="demo-link" onclick="fillDemo('admin@demo.com','Admin123!')">admin@demo.com / Admin123!</span><br>
+          <strong>Analyst</strong> —
+          <span class="demo-link" onclick="fillDemo('analyst@demo.com','Analyst123!')">analyst@demo.com /
+            Analyst123!</span><br>
+          <strong>Viewer</strong> —
+          <span class="demo-link" onclick="fillDemo('viewer@demo.com','Viewer123!')">viewer@demo.com / Viewer123!</span>
+        </p>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email address</label>
+          <input id="login-email" class="form-input" type="email" placeholder="you@company.com" autocomplete="email"
+            required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input id="login-password" class="form-input" type="password" placeholder="••••••••"
+            autocomplete="current-password" required />
+        </div>
+        <div id="login-error" class="form-error"></div>
+        <button id="login-btn" class="btn btn-primary btn-full" type="submit" style="margin-top:8px">Sign In</button>
+      </form>
     </div>
-
-    <form id="login-form">
-      <div class="form-group">
-        <label class="form-label" for="login-email">Email address</label>
-        <input id="login-email" class="form-input" type="email" placeholder="you@company.com" autocomplete="email" required />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="login-password">Password</label>
-        <input id="login-password" class="form-input" type="password" placeholder="••••••••" autocomplete="current-password" required />
-      </div>
-      <div id="login-error" class="form-error"></div>
-      <button id="login-btn" class="btn btn-primary btn-full" type="submit" style="margin-top:8px">Sign In</button>
-    </form>
   </div>
-</div>
 
-<!-- ═══════════════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════════
      APP SHELL
 ═══════════════════════════════════════════════════════ -->
-<div id="app-shell" class="hidden">
+  <div id="app-shell" class="hidden">
 
-  <!-- ── Sidebar ── -->
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">💹</div>
-        <div>
-          <div class="sidebar-logo-name">Finance OS</div>
-          <div class="sidebar-logo-sub">Enterprise</div>
+    <!-- ── Sidebar ── -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">💹</div>
+          <div>
+            <div class="sidebar-logo-name">Finance OS</div>
+            <div class="sidebar-logo-sub">Enterprise</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Main</div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
 
-      <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-        </svg>
-        Dashboard
-      </div>
-
-      <div class="nav-item" id="nav-records" data-page="records" onclick="navigate('records')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
-        </svg>
-        Records
-        <span class="nav-badge" id="records-count-badge">—</span>
-      </div>
-
-      <div class="nav-item" id="nav-analytics" data-page="analytics" onclick="navigate('analytics')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-          <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
-        </svg>
-        Analytics
-      </div>
-
-      <div class="nav-section-label" style="margin-top:8px">Admin</div>
-
-      <div class="nav-item hidden" id="nav-users" data-page="users" onclick="navigate('users')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-        Users
-        <span class="nav-badge" id="users-count-badge">—</span>
-      </div>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="user-avatar" id="sb-avatar">?</div>
-        <div>
-          <div class="user-name" id="sb-name">—</div>
-          <div class="user-role" id="sb-role">—</div>
-        </div>
-        <button class="logout-btn" onclick="logout()" title="Sign out">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
           </svg>
-        </button>
+          Dashboard
+        </div>
+
+        <div class="nav-item" id="nav-records" data-page="records" onclick="navigate('records')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+          </svg>
+          Records
+          <span class="nav-badge" id="records-count-badge">—</span>
+        </div>
+
+        <div class="nav-item" id="nav-analytics" data-page="analytics" onclick="navigate('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+            <line x1="2" y1="20" x2="22" y2="20" />
+          </svg>
+          Analytics
+        </div>
+
+        <div class="nav-section-label" style="margin-top:8px">Admin</div>
+
+        <div class="nav-item hidden" id="nav-users" data-page="users" onclick="navigate('users')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Users
+          <span class="nav-badge" id="users-count-badge">—</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar" id="sb-avatar">?</div>
+          <div>
+            <div class="user-name" id="sb-name">—</div>
+            <div class="user-role" id="sb-role">—</div>
+          </div>
+          <button class="logout-btn" onclick="logout()" title="Sign out">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
-  </aside>
+    </aside>
 
-  <!-- ── Main area ── -->
-  <main id="main">
+    <!-- ── Main area ── -->
+    <main id="main">
 
-    <!-- Top header -->
-    <header id="top-header">
-      <div class="header-left">
-        <div class="header-page-title" id="header-page-title">Dashboard</div>
-        <div class="header-breadcrumb">Finance OS &rsaquo; <span id="header-page-title-bc">Overview</span></div>
-      </div>
-      <div class="header-right">
-        <div class="status-dot">Live</div>
-        <span class="header-time" id="header-clock">--:--:--</span>
-        <span class="role-chip" id="header-role-chip">—</span>
-      </div>
-    </header>
+      <!-- Top header -->
+      <header id="top-header">
+        <div class="header-left">
+          <div class="header-page-title" id="header-page-title">Dashboard</div>
+          <div class="header-breadcrumb">Finance OS &rsaquo; <span id="header-page-title-bc">Overview</span></div>
+        </div>
+        <div class="header-right">
+          <div class="status-dot">Live</div>
+          <span class="header-time" id="header-clock">--:--:--</span>
+          <span class="role-chip" id="header-role-chip">—</span>
+        </div>
+      </header>
 
-    <!-- Content -->
-    <div id="content">
+      <!-- Content -->
+      <div id="content">
 
-      <!-- ══════════════════════════════════════
+        <!-- ══════════════════════════════════════
            PAGE: DASHBOARD
       ══════════════════════════════════════ -->
-      <section id="page-dashboard" class="page-section">
+        <section id="page-dashboard" class="page-section">
 
-        <div class="section-title"><span>Financial Overview</span></div>
-        <div class="section-desc">Real-time snapshot of your financial position and activity trends.</div>
+          <div class="section-title"><span>Financial Overview</span></div>
+          <div class="section-desc">Real-time snapshot of your financial position and activity trends.</div>
 
-        <!-- Stat Cards -->
-        <div class="stats-grid">
-          <div class="stat-card income">
-            <div class="stat-header">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          <!-- Stat Cards -->
+          <div class="stats-grid">
+            <div class="stat-card income">
+              <div class="stat-header">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                  </svg>
+                </div>
+                <div class="stat-change up">
+                  <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+                    <path d="M12 4l8 8H4z" />
+                  </svg>
+                  Income
+                </div>
               </div>
-              <div class="stat-change up">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 4l8 8H4z"/></svg>
-                Income
+              <div>
+                <div class="stat-label">Total Income</div>
+                <div class="stat-value" id="stat-income">—</div>
               </div>
             </div>
-            <div>
-              <div class="stat-label">Total Income</div>
-              <div class="stat-value" id="stat-income">—</div>
+            <div class="stat-card expense">
+              <div class="stat-header">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12l7 7 7-7" />
+                  </svg>
+                </div>
+                <div class="stat-change down">
+                  <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+                    <path d="M12 20l8-8H4z" />
+                  </svg>
+                  Expense
+                </div>
+              </div>
+              <div>
+                <div class="stat-label">Total Expenses</div>
+                <div class="stat-value" id="stat-expense">—</div>
+              </div>
+            </div>
+            <div class="stat-card balance">
+              <div class="stat-header">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                  </svg>
+                </div>
+                <div class="stat-change" id="stat-balance-chg">—</div>
+              </div>
+              <div>
+                <div class="stat-label">Net Balance</div>
+                <div class="stat-value" id="stat-balance">—</div>
+              </div>
+            </div>
+            <div class="stat-card records">
+              <div class="stat-header">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6" />
+                  </svg>
+                </div>
+                <div class="stat-change up" style="background:var(--info-bg);color:var(--info)">
+                  Active
+                </div>
+              </div>
+              <div>
+                <div class="stat-label">Total Records</div>
+                <div class="stat-value" style="color:var(--accent-2)" id="stat-records">—</div>
+              </div>
             </div>
           </div>
-          <div class="stat-card expense">
-            <div class="stat-header">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-              </div>
-              <div class="stat-change down">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 20l8-8H4z"/></svg>
-                Expense
-              </div>
-            </div>
-            <div>
-              <div class="stat-label">Total Expenses</div>
-              <div class="stat-value" id="stat-expense">—</div>
-            </div>
-          </div>
-          <div class="stat-card balance">
-            <div class="stat-header">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-              </div>
-              <div class="stat-change" id="stat-balance-chg">—</div>
-            </div>
-            <div>
-              <div class="stat-label">Net Balance</div>
-              <div class="stat-value" id="stat-balance">—</div>
-            </div>
-          </div>
-          <div class="stat-card records">
-            <div class="stat-header">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-              </div>
-              <div class="stat-change up" style="background:var(--info-bg);color:var(--info)">
-                Active
-              </div>
-            </div>
-            <div>
-              <div class="stat-label">Total Records</div>
-              <div class="stat-value" style="color:var(--accent-2)" id="stat-records">—</div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Charts row -->
-        <div class="charts-grid">
-          <!-- Trend chart -->
+          <!-- Charts row -->
+          <div class="charts-grid">
+            <!-- Trend chart -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                    Income vs Expenses
+                  </div>
+                  <div class="card-subtitle">Monthly trend — last 7 months</div>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="trend-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Donut chart -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 2a10 10 0 0 1 10 10" />
+                    </svg>
+                    Category Split
+                  </div>
+                  <div class="card-subtitle">Top categories by total</div>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="donut-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
           <div class="card">
             <div class="card-header">
               <div>
                 <div class="card-title">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                  Income vs Expenses
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  Recent Activity
                 </div>
-                <div class="card-subtitle">Monthly trend — last 7 months</div>
+                <div class="card-subtitle">Latest 8 financial entries</div>
               </div>
+              <button class="btn btn-ghost btn-sm" onclick="navigate('records')">View All →</button>
             </div>
-            <div class="chart-wrap">
-              <canvas id="trend-chart"></canvas>
-            </div>
-          </div>
-
-          <!-- Donut chart -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-                  Category Split
-                </div>
-                <div class="card-subtitle">Top categories by total</div>
-              </div>
-            </div>
-            <div class="chart-wrap">
-              <canvas id="donut-chart"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/><polyline points="12 6 12 12 16 14"/></svg>
-                Recent Activity
-              </div>
-              <div class="card-subtitle">Latest 8 financial entries</div>
-            </div>
-            <button class="btn btn-ghost btn-sm" onclick="navigate('records')">View All →</button>
-          </div>
-          <div class="activity-list" id="recent-list">
-            <!-- populated by JS -->
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ══════════════════════════════════════
-           PAGE: RECORDS
-      ══════════════════════════════════════ -->
-      <section id="page-records" class="page-section hidden">
-
-        <div class="flex justify-between items-center" style="margin-bottom:20px">
-          <div>
-            <div class="section-title"><span>Financial Records</span></div>
-            <div class="section-desc">Manage income and expense entries with full CRUD operations.</div>
-          </div>
-          <div id="add-record-btn-wrap">
-            <button class="btn btn-primary" onclick="openAddRecord()">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-              Add Record
-            </button>
-          </div>
-        </div>
-
-        <div class="card" style="overflow:hidden">
-          <!-- Filters -->
-          <div class="filters-bar">
-            <select id="filter-type" class="filter-input" onchange="applyFilters()">
-              <option value="">All Types</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-            <input id="filter-category" class="filter-input" type="text" placeholder="Category…" onchange="applyFilters()" style="min-width:130px" />
-            <input id="filter-from" class="filter-input" type="date" onchange="applyFilters()" />
-            <input id="filter-to"   class="filter-input" type="date" onchange="applyFilters()" />
-            <button class="btn btn-ghost btn-sm" onclick="applyFilters()">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              Filter
-            </button>
-            <button class="btn btn-ghost btn-sm" onclick="clearFilters()" style="color:var(--text-3)">Clear</button>
-          </div>
-
-          <!-- Table -->
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Type</th>
-                  <th>Category</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Notes</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="records-tbody">
-                <!-- populated by JS -->
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Pagination -->
-          <div class="pagination">
-            <span id="pagination-info" style="color:var(--text-2)">Loading…</span>
-            <div class="pagination-btns" id="pagination-btns"></div>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ══════════════════════════════════════
-           PAGE: ANALYTICS
-      ══════════════════════════════════════ -->
-      <section id="page-analytics" class="page-section hidden">
-
-        <div class="section-title"><span>Analytics & Insights</span></div>
-        <div class="section-desc">Deep-dive into spending patterns, trends, and financial health metrics.</div>
-
-        <!-- Insights cards (analyst+admin) -->
-        <div class="card" style="margin-bottom:20px">
-          <div class="card-header">
-            <div>
-              <div class="card-title">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                Key Metrics
-              </div>
-              <div class="card-subtitle">Analyst-level financial intelligence</div>
-            </div>
-          </div>
-          <div class="insights-grid" id="insights-grid">
-            <div class="insight-card">
-              <div class="insight-label">Expense / Income Ratio</div>
-              <div class="insight-val text-warning" id="ins-ratio">—</div>
-              <div class="insight-sub">Lower is better</div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-label">Avg Monthly Income</div>
-              <div class="insight-val text-success" id="ins-avg-inc">—</div>
-              <div class="insight-sub">Per active month</div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-label">Avg Monthly Expense</div>
-              <div class="insight-val text-danger" id="ins-avg-exp">—</div>
-              <div class="insight-sub">Per active month</div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-label">Top Spend Category</div>
-              <div class="insight-val text-accent" id="ins-top-cat">—</div>
-              <div class="insight-sub">Highest expense</div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-label">Top Income Category</div>
-              <div class="insight-val text-success" id="ins-top-inc">—</div>
-              <div class="insight-sub">Largest income source</div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-label">Active Months</div>
-              <div class="insight-val text-accent" id="ins-months">—</div>
-              <div class="insight-sub">Months with records</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="analytics-grid">
-          <!-- Category bar chart -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
-                  Spending by Category
-                </div>
-                <div class="card-subtitle">Top 10 categories by total amount</div>
-              </div>
-            </div>
-            <div class="chart-wrap" style="padding-bottom:16px">
-              <canvas id="cat-chart" style="max-height:320px"></canvas>
-            </div>
-          </div>
-
-          <!-- Category progress bars -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                  Category Breakdown
-                </div>
-                <div class="card-subtitle">Relative share of each category</div>
-              </div>
-            </div>
-            <div style="padding:4px 24px 16px" id="cat-bars">
+            <div class="activity-list" id="recent-list">
               <!-- populated by JS -->
             </div>
           </div>
-        </div>
 
-        <!-- 12-month trends chart -->
-        <div class="card">
-          <div class="card-header">
+        </section>
+
+        <!-- ══════════════════════════════════════
+           PAGE: RECORDS
+      ══════════════════════════════════════ -->
+        <section id="page-records" class="page-section hidden">
+
+          <div class="flex justify-between items-center" style="margin-bottom:20px">
             <div>
-              <div class="card-title">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                12-Month Trend
-              </div>
-              <div class="card-subtitle">Income vs expenses over the last 12 months</div>
+              <div class="section-title"><span>Financial Records</span></div>
+              <div class="section-desc">Manage income and expense entries with full CRUD operations.</div>
+            </div>
+            <div id="add-record-btn-wrap">
+              <button class="btn btn-primary" onclick="openAddRecord()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Add Record
+              </button>
             </div>
           </div>
-          <div class="chart-wrap">
-            <canvas id="trends12-chart"></canvas>
+
+          <div class="card" style="overflow:hidden">
+            <!-- Filters -->
+            <div class="filters-bar">
+              <select id="filter-type" class="filter-input" onchange="applyFilters()">
+                <option value="">All Types</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+              <input id="filter-category" class="filter-input" type="text" placeholder="Category…"
+                onchange="applyFilters()" style="min-width:130px" />
+              <input id="filter-from" class="filter-input" type="date" onchange="applyFilters()" />
+              <input id="filter-to" class="filter-input" type="date" onchange="applyFilters()" />
+              <button class="btn btn-ghost btn-sm" onclick="applyFilters()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+                Filter
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="clearFilters()" style="color:var(--text-3)">Clear</button>
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="records-tbody">
+                  <!-- populated by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+              <span id="pagination-info" style="color:var(--text-2)">Loading…</span>
+              <div class="pagination-btns" id="pagination-btns"></div>
+            </div>
           </div>
-        </div>
 
-      </section>
+        </section>
 
-      <!-- ══════════════════════════════════════
+        <!-- ══════════════════════════════════════
+           PAGE: ANALYTICS
+      ══════════════════════════════════════ -->
+        <section id="page-analytics" class="page-section hidden">
+
+          <div class="section-title"><span>Analytics & Insights</span></div>
+          <div class="section-desc">Deep-dive into spending patterns, trends, and financial health metrics.</div>
+
+          <!-- Insights cards (analyst+admin) -->
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                  Key Metrics
+                </div>
+                <div class="card-subtitle">Analyst-level financial intelligence</div>
+              </div>
+            </div>
+            <div class="insights-grid" id="insights-grid">
+              <div class="insight-card">
+                <div class="insight-label">Expense / Income Ratio</div>
+                <div class="insight-val text-warning" id="ins-ratio">—</div>
+                <div class="insight-sub">Lower is better</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-label">Avg Monthly Income</div>
+                <div class="insight-val text-success" id="ins-avg-inc">—</div>
+                <div class="insight-sub">Per active month</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-label">Avg Monthly Expense</div>
+                <div class="insight-val text-danger" id="ins-avg-exp">—</div>
+                <div class="insight-sub">Per active month</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-label">Top Spend Category</div>
+                <div class="insight-val text-accent" id="ins-top-cat">—</div>
+                <div class="insight-sub">Highest expense</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-label">Top Income Category</div>
+                <div class="insight-val text-success" id="ins-top-inc">—</div>
+                <div class="insight-sub">Largest income source</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-label">Active Months</div>
+                <div class="insight-val text-accent" id="ins-months">—</div>
+                <div class="insight-sub">Months with records</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="analytics-grid">
+            <!-- Category bar chart -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="20" x2="18" y2="10" />
+                      <line x1="12" y1="20" x2="12" y2="4" />
+                      <line x1="6" y1="20" x2="6" y2="14" />
+                      <line x1="2" y1="20" x2="22" y2="20" />
+                    </svg>
+                    Spending by Category
+                  </div>
+                  <div class="card-subtitle">Top 10 categories by total amount</div>
+                </div>
+              </div>
+              <div class="chart-wrap" style="padding-bottom:16px">
+                <canvas id="cat-chart" style="max-height:320px"></canvas>
+              </div>
+            </div>
+
+            <!-- Category progress bars -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                    Category Breakdown
+                  </div>
+                  <div class="card-subtitle">Relative share of each category</div>
+                </div>
+              </div>
+              <div style="padding:4px 24px 16px" id="cat-bars">
+                <!-- populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 12-month trends chart -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                  12-Month Trend
+                </div>
+                <div class="card-subtitle">Income vs expenses over the last 12 months</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="trends12-chart"></canvas>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ══════════════════════════════════════
            PAGE: USERS
       ══════════════════════════════════════ -->
-      <section id="page-users" class="page-section hidden">
+        <section id="page-users" class="page-section hidden">
 
-        <div class="section-title"><span>User Management</span></div>
-        <div class="section-desc">Manage user accounts, roles, and access permissions. Admin only.</div>
+          <div class="section-title"><span>User Management</span></div>
+          <div class="section-desc">Manage user accounts, roles, and access permissions. Admin only.</div>
 
-        <div class="card" style="overflow:hidden">
-          <div class="card-header">
-            <div>
-              <div class="card-title">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                All Users
+          <div class="card" style="overflow:hidden">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  All Users
+                </div>
+                <div class="card-subtitle">Manage roles and deactivate accounts</div>
               </div>
-              <div class="card-subtitle">Manage roles and deactivate accounts</div>
+              <button class="btn btn-ghost btn-sm" onclick="loadUsers()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16" />
+                </svg>
+                Refresh
+              </button>
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="loadUsers()">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-              Refresh
-            </button>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+              </table>
+            </div>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Joined</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="users-tbody"></tbody>
-            </table>
-          </div>
-        </div>
 
-      </section>
+        </section>
 
-    </div><!-- /#content -->
-  </main>
-</div><!-- /#app-shell -->
+      </div><!-- /#content -->
+    </main>
+  </div><!-- /#app-shell -->
 
-<!-- ═══════════════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════════
      MODALS
 ═══════════════════════════════════════════════════════ -->
-<div id="modal-overlay" class="hidden">
+  <div id="modal-overlay" class="hidden">
 
-  <!-- ── Add/Edit Record Modal ── -->
-  <div class="modal modal-pane" id="record-modal">
-    <div class="modal-header">
-      <div class="modal-title" style="color:var(--accent-h)">
-        <span id="rec-modal-icon"></span>
-        <span id="rec-modal-title">Add New Record</span>
-      </div>
-      <button class="modal-close" onclick="hideModal('record-modal')">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="rec-id" />
-      <form id="rec-form" onsubmit="event.preventDefault();saveRecord()">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Type *</label>
-            <select id="rec-type" class="form-input form-select" required>
-              <option value="">Select type…</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Amount *</label>
-            <input id="rec-amount" class="form-input" type="number" min="0.01" step="0.01" placeholder="0.00" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Category *</label>
-            <input id="rec-category" class="form-input" type="text" placeholder="e.g. salary, rent…" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Date *</label>
-            <input id="rec-date" class="form-input" type="date" required />
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Notes</label>
-            <input id="rec-notes" class="form-input" type="text" placeholder="Optional description…" />
-          </div>
+    <!-- ── Add/Edit Record Modal ── -->
+    <div class="modal modal-pane" id="record-modal">
+      <div class="modal-header">
+        <div class="modal-title" style="color:var(--accent-h)">
+          <span id="rec-modal-icon"></span>
+          <span id="rec-modal-title">Add New Record</span>
         </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="hideModal('record-modal')">Cancel</button>
-      <button class="btn btn-primary" id="rec-save-btn" onclick="saveRecord()">Save Record</button>
-    </div>
-  </div>
-
-  <!-- ── Confirm Dialog ── -->
-  <div class="modal modal-pane hidden" id="confirm-modal" style="max-width:400px">
-    <div class="modal-body" style="text-align:center;padding:36px 28px 20px">
-      <div class="confirm-icon">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <button class="modal-close" onclick="hideModal('record-modal')">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
       </div>
-      <div class="confirm-title" id="confirm-title">Confirm Action</div>
-      <div class="confirm-text text-muted" id="confirm-text" style="margin-top:8px;line-height:1.6;font-size:0.875rem"></div>
+      <div class="modal-body">
+        <input type="hidden" id="rec-id" />
+        <form id="rec-form" onsubmit="event.preventDefault();saveRecord()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Type *</label>
+              <select id="rec-type" class="form-input form-select" required>
+                <option value="">Select type…</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount *</label>
+              <input id="rec-amount" class="form-input" type="number" min="0.01" step="0.01" placeholder="0.00"
+                required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <input id="rec-category" class="form-input" type="text" placeholder="e.g. salary, rent…" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date *</label>
+              <input id="rec-date" class="form-input" type="date" required />
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Notes</label>
+              <input id="rec-notes" class="form-input" type="text" placeholder="Optional description…" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="hideModal('record-modal')">Cancel</button>
+        <button class="btn btn-primary" id="rec-save-btn" onclick="saveRecord()">Save Record</button>
+      </div>
     </div>
-    <div class="modal-footer" style="padding-bottom:28px">
-      <button class="btn btn-ghost" onclick="confirmNo()">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmYes()">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Confirm
-      </button>
+
+    <!-- ── Confirm Dialog ── -->
+    <div class="modal modal-pane hidden" id="confirm-modal" style="max-width:400px">
+      <div class="modal-body" style="text-align:center;padding:36px 28px 20px">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <div class="confirm-title" id="confirm-title">Confirm Action</div>
+        <div class="confirm-text text-muted" id="confirm-text"
+          style="margin-top:8px;line-height:1.6;font-size:0.875rem"></div>
+      </div>
+      <div class="modal-footer" style="padding-bottom:28px">
+        <button class="btn btn-ghost" onclick="confirmNo()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmYes()">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+          Confirm
+        </button>
+      </div>
     </div>
+
   </div>
 
-</div>
+  <!-- Toast container -->
+  <div id="toast-container"></div>
 
-<!-- Toast container -->
-<div id="toast-container"></div>
-
-<script src="/app.js"></script>
+  <script src="/app.js"></script>
 </body>
+
 </html>

@@ -2,7 +2,7 @@
 
 A clean, production-style REST API for a finance dashboard system — built with **Node.js**, **Express**, **NeDB** (embedded document store), and **JWT authentication**.
 
-live demo https://finance-dashboard-production-c62e.up.railway.app/
+live demo https://finance-dashboard-production-b769.up.railway.app/
 ---
 
 ## Tech Stack
